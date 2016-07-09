@@ -22,5 +22,8 @@
         "email": "support@whmcs.com",
         "forum": "http://forums.whmcs.com/",
         "wiki": "http://docs.whmcs.com/"
+    },
+    "require": {
+        "iyzico/iyzipay-php": "^2.0"
     }
 }
