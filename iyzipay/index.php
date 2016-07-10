@@ -260,18 +260,15 @@ function iyzipay_capture($params)
         $paymentCard->setExpireYear($ccExpireYear);
         $paymentCard->setCvc($params['cccvv']);
         $paymentCard->setRegisterCard(0);
-        $request->setPaymentCard($paymentCard);
-    }
-
-    if (NULL == $params['cardnum'])
-    {
+    }  else {
         list ($cardUserKey, $cardToken) = get_card_token($params['gatewayid']);
         /* Create payment card details */
         $paymentCard = new \Iyzipay\Model\PaymentCard();
         $paymentCard->setCardUserKey($cardUserKey);
         $paymentCard->setCardToken($cardToken);
-        $request->setPaymentCard($paymentCard);
     }
+
+    $request->setPaymentCard($paymentCard);
 
     /* Finally, make the request and return payment object */
     $payment = \Iyzipay\Model\Payment::create($request, $options);
