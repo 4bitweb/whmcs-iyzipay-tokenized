@@ -2,6 +2,12 @@
 /**
  * WHMCS Iyzipay Merchant Gateway Module
  *
+ * Requirements:
+ *
+ * - WHMCS > 6.0 (untested below WHMCS below 6.0)
+ * - PHP > 5.3.7
+ * - Composer (https://getcomposer.org/) if you checkout the code from git
+ *
  * This gateway module implements Iyzipay's payment API and leverages Iyzipay's
  * credit card storage.
  *
