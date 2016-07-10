@@ -121,6 +121,19 @@ function get_comission_rate($payment)
 }
 
 /**
+ * Get Iyzipay API endpoint url
+ *
+ * Return the suitable API URL for testing or live modes.
+ *
+ * @param array WHMCS parameters
+ * @return string API URL
+ */
+function set_base_url($params)
+{
+    return ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
+}
+
+/**
  * Define module related meta data.
  *
  * Values returned here are used to determine module related capabilities and
@@ -211,7 +224,7 @@ function iyzipay_config()
 function iyzipay_capture($params)
 {
     // test mode aciksa API adresini degistirelim
-    $baseUrl = ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
+    $baseUrl = set_base_url($params);
     // conversationId uretelim
     $conversationId = "123456789";
     $invoiceItems = get_invoice_items($params['invoiceid']);
@@ -330,7 +343,7 @@ function iyzipay_capture($params)
         );
     } else {
         return array(
-            'status' => strtolower($payment->getStatus()),
+            'status' => 'failed',
             'rawdata' => $payment->getRawResult(),
         );
     }
@@ -351,7 +364,7 @@ function iyzipay_capture($params)
 function iyzipay_refund($params)
 {
     // test mode aciksa API adresini degistirelim
-    $baseUrl = ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
+    $baseUrl = set_base_url($params);
     // conversationId uretelim
     $conversationId = "123456789";
 
@@ -379,7 +392,7 @@ function iyzipay_refund($params)
         );
     } else {
         return array(
-            'status' => strtolower($cancel->getStatus()),
+            'status' => 'failed',
             'rawdata' => $cancel->getRawResult(),
         );
     }
@@ -403,7 +416,7 @@ function iyzipay_storeremote($params)
 
     // init iyzipay api options
     // test mode aciksa API adresini degistirelim
-    $baseUrl = ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
+    $baseUrl = set_base_url($params);
     // conversationId uretelim
     $conversationId = "123456789";
     // get the CardToken and CardUserKey from database
