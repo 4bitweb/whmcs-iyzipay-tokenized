@@ -19,7 +19,7 @@ if (!defined("WHMCS")) {
     die("This file cannot be accessed directly");
 }
 
-// require iyzipay PHP client - should be installed using composer
+// include iyzipay PHP client - should be installed using composer
 include __DIR__ . '/vendor/autoload.php';
 
 // use WHMCS (Laravel) db functions
