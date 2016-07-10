@@ -1,31 +1,18 @@
 <?php
 /**
- * WHMCS Sample Merchant Gateway Module
+ * WHMCS Iyzipay Merchant Gateway Module
  *
- * This sample file demonstrates how a merchant gateway module supporting
- * 3D Secure Authentication, Captures and Refunds can be structured.
+ * This gateway module implements Iyzipay's payment API and leverages Iyzipay's
+ * credit card storage.
  *
- * If your merchant gateway does not support 3D Secure Authentication, you can
- * simply omit that function and the callback file from your own module.
+ * When a user adds or removes a credit card, it will be stored on Iyzico's
+ * servers. WHMCS only stores the last 4 digits and expiration date of the cc.
  *
- * Within the module itself, all functions must be prefixed with the module
- * filename, followed by an underscore, and then the function name. For this
- * example file, the filename is "merchantgateway" and therefore all functions
- * begin "merchantgateway_".
- * For more information, please refer to the online documentation.
+ * - This module currently does not support installments.
+ * - You can only accept TRY payments at the moment.
  *
- * @see http://docs.whmcs.com/Gateway_Module_Developer_Docs
- *
- * @copyright Copyright (c) WHMCS Limited 2015
- * @license http://www.whmcs.com/license/ WHMCS Eula
- */
-
-/* TODO
- *
- * - Group all shared functions
- * - Fix documentation and explanation blocks
- * - Add payment gateway fees to capture output (see: http://docs.whmcs.com/Dev:Gateway:Merchant:Captures)
- *   received amount = totalamount - (iyziCommissionRateAmount + iyziCommissionFee)
+ * @copyright Copyright (c) (Tahir Can Ozokur - 4-bit) 2016
+ * @license MIT - See the LICENSE file for details.
  */
 
 if (!defined("WHMCS")) {
@@ -133,16 +120,6 @@ function set_base_url($params)
     return ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
 }
 
-/**
- * Define module related meta data.
- *
- * Values returned here are used to determine module related capabilities and
- * settings.
- *
- * @see http://docs.whmcs.com/Gateway_Module_Meta_Data_Parameters
- *
- * @return array
- */
 function iyzipay_MetaData()
 {
     return array(
@@ -153,26 +130,6 @@ function iyzipay_MetaData()
     );
 }
 
-/**
- * Define gateway configuration options.
- *
- * The fields you define here determine the configuration options that are
- * presented to administrator users when activating and configuring your
- * payment gateway module for use.
- *
- * Supported field types include:
- * * text
- * * password
- * * yesno
- * * dropdown
- * * radio
- * * textarea
- *
- * Examples of each field type and their possible configuration parameters are
- * provided in the sample function below.
- *
- * @return array
- */
 function iyzipay_config()
 {
     return array(
@@ -207,20 +164,6 @@ function iyzipay_config()
     );
 }
 
-/**
- * Capture payment.
- *
- * Called when a payment is to be processed and captured.
- *
- * The card cvv number will only be present for the initial card holder present
- * transactions. Automated recurring capture attempts will not provide it.
- *
- * @param array $params Payment Gateway Module Parameters
- *
- * @see http://docs.whmcs.com/Payment_Gateway_Module_Parameters
- *
- * @return array Transaction response status
- */
 function iyzipay_capture($params)
 {
     // test mode aciksa API adresini degistirelim
@@ -349,18 +292,6 @@ function iyzipay_capture($params)
     }
 }
 
-
-/**
- * Refund transaction.
- *
- * Called when a refund is requested for a previously successful transaction.
- *
- * @param array $params Payment Gateway Module Parameters
- *
- * @see http://docs.whmcs.com/Payment_Gateway_Module_Parameters
- *
- * @return array Transaction response status
- */
 function iyzipay_refund($params)
 {
     // test mode aciksa API adresini degistirelim
@@ -398,28 +329,17 @@ function iyzipay_refund($params)
     }
 }
 
-/**
- * Remote card storage
- *
- * Called when a credit card is requested for storage by iyzipay
- *
- * @param array $params Payment Gateway Module Parameters
- *
- * @see http://docs.whmcs.com/Payment_Gateway_Module_Parameters
- *
- * @return array Remote storage response status
- */
 function iyzipay_storeremote($params)
 {
     $ccExpireMonth = substr($params['cardexp'], 0, 2);
     $ccExpireYear = date("Y", mktime(0, 0, 0, 1, 1, substr($params['cardexp'], 2, 2)));
 
     // init iyzipay api options
-    // test mode aciksa API adresini degistirelim
+    // Get the API url
     $baseUrl = set_base_url($params);
-    // conversationId uretelim
+    // generate a unique conversation ID
     $conversationId = "123456789";
-    // get the CardToken and CardUserKey from database
+    // extract CardToken and CardUserKey from gatewayid
     list ($cardUserKey, $cardToken) = get_card_token($params['gatewayid']);
 
     /* Create Iyzipay API options */
