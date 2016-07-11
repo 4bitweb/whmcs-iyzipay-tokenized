@@ -1,47 +1,35 @@
-# WHMCS Sample Merchant Gateway Module #
+# WHMCS Iyzipay Merchant Gateway module #
 
 ## Summary ##
 
-Payment Gateway modules allow you to integrate payment solutions with the WHMCS
-platform.
+This gateway module provides Iyzipay (http://iyzico.com) payment gateway for WHMCS platform.
 
-There are two types of gateway module:
+Currently it supports payments in TRY, but support for other currencies (which iyzipay supports) can be added easily. Also this module supports remote tokenised credit card storage (ie. WHMCS won't store the CC details in its database, you'll be storing them on Iyzipay). Refunds are supported.
 
-* Third Party Gateways - these are payment solutions where checkout occurs
-on a remote website, usually hosted by the payment gateway themselves.
-
-* Merchant Gateways - these are payment solutions where credit card details
-are collected - usually within the WHMCS application, though more and more
-often this will be done remotely, typically via an iframe, with a page hosted
-remotely by the payment gateway enabling tokenised storage.
-
-The sample files here demonstrate how we suggest a Merchant Payment Gateway
-module for WHMCS be structured and implemented.
-
-For more information, please refer to the documentation at:
-http://docs.whmcs.com/Gateway_Module_Developer_Docs
-
-## Recommended Module Content ##
-
-The recommended structure of a merchant gateway module is as follows.
-
-```
- modules/gateways/
-  |- callback/merchantgateway.php
-  |  merchantgateway.php
-```
+This module does not support 3dsecure.
 
 ## Minimum Requirements ##
+
+- WHMCS >= 6.0
+- PHP >= 5.3.7
+- Composer if you'd like to clone this repo
 
 For the latest WHMCS minimum system requirements, please refer to
 http://docs.whmcs.com/System_Requirements
 
-We recommend your module follows the same minimum requirements wherever
-possible.
+## Installation ##
 
-## Useful Resources
-* [Developer Resources](http://www.whmcs.com/developers/)
-* [Hook Documentation](http://docs.whmcs.com/Hooks)
-* [API Documentation](http://docs.whmcs.com/API)
+You can install this module by cloning the repo or downloading the latest release from GitHub. See the [releases](https://github.com/4bitweb/whmcs-iyzipay-tokenised/releases) page.
 
-[WHMCS Limited](http://www.whmcs.com)
+#### Cloning the repo ####
+Clone the repo to whmcs_dir/modules/gateway directory directly. Go into your iyzipay directory and run:
+
+`# composer install`
+
+#### Downloading the latest release (Recommended!) ####
+You can download the latest release and unzip it to your whmcs_dir/modules/gateway directory. You won't need to user composer for required Iyzipay modules, they will be in the compressed package.
+
+After installing using whichever method you prefer, go to your WHMCS admin page and activate your gateway. You'll need to provide;
+- Your API key (or Sandbox API key)
+- Your secret key (or Sandbox secret key)
+- A unique identifier for Iyzipay conversation ID
