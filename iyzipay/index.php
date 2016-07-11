@@ -31,6 +31,8 @@ include __DIR__ . '/vendor/autoload.php';
 // use WHMCS (Laravel) db functions
 use Illuminate\Database\Capsule\Manager as Capsule;
 
+/** HELPER FUNCTIONS START **/
+
 /**
  * Pull the invoice items from DB.
  *
@@ -126,6 +128,8 @@ function set_base_url($params)
     return ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
 }
 
+/** HELPER FUNCTIONS END **/
+
 function iyzipay_MetaData()
 {
     return array(
@@ -161,6 +165,13 @@ function iyzipay_config()
             'Default' => '',
             'Description' => 'Enter your Secret Key here',
         ),
+        'conversationId' => array(
+            'FriendlyName' => 'Conversation ID',
+            'Type' => 'text',
+            'Size' => '16',
+            'Default' => '',
+            'Description' => 'A random alphanumeric string for Iyzipay conversation ID. Must be set for 3DSecure'
+        ),
         // the yesno field type displays a single checkbox option
         'testMode' => array(
             'FriendlyName' => 'Test Mode',
@@ -174,8 +185,6 @@ function iyzipay_capture($params)
 {
     // test mode aciksa API adresini degistirelim
     $baseUrl = set_base_url($params);
-    // conversationId uretelim
-    $conversationId = "123456789";
     $invoiceItems = get_invoice_items($params['invoiceid']);
     $invoiceTotal = get_invoice_total($params['invoiceid']);
     $ccExpireMonth = substr($params['cardexp'], 0, 2);
@@ -193,7 +202,7 @@ function iyzipay_capture($params)
     /* Create payment request */
     $request = new \Iyzipay\Request\CreatePaymentRequest();
     $request->setLocale(\Iyzipay\Model\Locale::TR);
-    $request->setConversationId($conversationId);
+    $request->setConversationId($params['conversationId']);
     $request->setPrice($invoiceTotal);
     $request->setPaidPrice($params['amount']);
     $request->setCurrency(\Iyzipay\Model\Currency::TL);
@@ -299,8 +308,6 @@ function iyzipay_refund($params)
 {
     // test mode aciksa API adresini degistirelim
     $baseUrl = set_base_url($params);
-    // conversationId uretelim
-    $conversationId = "123456789";
 
     /* Create Iyzipay API options */
     $options = new \Iyzipay\Options();
@@ -310,7 +317,7 @@ function iyzipay_refund($params)
 
     $request = new \Iyzipay\Request\CreateCancelRequest();
     $request->setLocale(\Iyzipay\Model\Locale::TR);
-    $request->setConversationId("123456789");
+    $request->setConversationId($params['conversationId']);
     $request->setPaymentId($params['transid']);
 
     # make request
@@ -340,8 +347,7 @@ function iyzipay_storeremote($params)
     // init iyzipay api options
     // Get the API url
     $baseUrl = set_base_url($params);
-    // generate a unique conversation ID
-    $conversationId = "123456789";
+
     // extract CardToken and CardUserKey from gatewayid
     list ($cardUserKey, $cardToken) = get_card_token($params['gatewayid']);
 
@@ -356,7 +362,7 @@ function iyzipay_storeremote($params)
     {
         $request = new \Iyzipay\Request\DeleteCardRequest();
         $request->setLocale(\Iyzipay\Model\Locale::TR);
-        $request->setConversationId("123456789");
+        $request->setConversationId($params['conversationId']);
         $request->setCardToken($cardToken);
         $request->setCardUserKey($cardUserKey);
 
@@ -367,13 +373,13 @@ function iyzipay_storeremote($params)
             /* Create gatewayid from userkey and token */
             $ccGatewayId = $card->getCardUserKey() . "|" . $card->getCardToken();
             return array(
-                "status" => "success",
-                "rawdata" => $card->getRawResult(),
+                'status' => 'success',
+                'rawdata' => $card->getRawResult(),
             );
         } else {
             return array(
-                "status" => "failed",
-                "rawdata" => $card->getRawResult(),
+                'status' => 'failed',
+                'rawdata' => $card->getRawResult(),
             );
         }
     }
@@ -386,7 +392,7 @@ function iyzipay_storeremote($params)
         # create request class
         $request = new \Iyzipay\Request\CreateCardRequest();
         $request->setLocale(\Iyzipay\Model\Locale::TR);
-        $request->setConversationId("123456789");
+        $request->setConversationId($params['conversationId']);
         $request->setEmail($params['clientdetails']['email']);
 
         $cardInformation = new \Iyzipay\Model\CardInformation();
@@ -404,14 +410,14 @@ function iyzipay_storeremote($params)
             /* Create gatewayid from userkey and token */
             $ccGatewayId = $card->getCardUserKey() . "|" . $card->getCardToken();
             return array(
-                "status" => strtolower($card->getStatus()),
-                "gatewayid" => $ccGatewayId,
-                "rawdata" => $card->getRawResult(),
+                'status' => strtolower($card->getStatus()),
+                'gatewayid' => $ccGatewayId,
+                'rawdata' => $card->getRawResult(),
             );
         } else {
             return array(
-                "status" => "failed",
-                "rawdata" => $card->getRawResult(),
+                'status' => 'failed',
+                'rawdata' => $card->getRawResult(),
             );
         }
     }
@@ -424,7 +430,7 @@ function iyzipay_storeremote($params)
         # create request class
         $request = new \Iyzipay\Request\CreateCardRequest();
         $request->setLocale(\Iyzipay\Model\Locale::TR);
-        $request->setConversationId("123456789");
+        $request->setConversationId($params['conversationId']);
         $request->setCardUserKey($cardUserKey);
 
         $cardInformation = new \Iyzipay\Model\CardInformation();
@@ -442,14 +448,14 @@ function iyzipay_storeremote($params)
             /* Create gatewayid from userkey and token */
             $ccGatewayId = $card->getCardUserKey() . "|" . $card->getCardToken();
             return array(
-                "status" => strtolower($card->getStatus()),
-                "gatewayid" => $ccGatewayId,
-                "rawdata" => $card->getRawResult(),
+                'status' => strtolower($card->getStatus()),
+                'gatewayid' => $ccGatewayId,
+                'rawdata' => $card->getRawResult(),
             );
         } else {
             return array(
-                "status" => "failed",
-                "rawdata" => $card->getRawResult(),
+                'status' => 'failed',
+                'rawdata' => $card->getRawResult(),
             );
         }
     }
