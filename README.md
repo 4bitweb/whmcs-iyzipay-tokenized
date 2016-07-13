@@ -27,7 +27,7 @@ Clone the repo to whmcs_dir/modules/gateway directory directly. Go into your iyz
 `# composer install`
 
 #### Downloading the latest release (Recommended!) ####
-You can download the latest release and unzip it to your whmcs_dir/modules/gateway directory. You won't need to user composer for required Iyzipay modules, they will be in the compressed package.
+You can download the latest release and unzip it to your whmcs_dir/modules/gateway directory. You won't need to use Composer, all the required libraries are included in the compressed package.
 
 After installing using whichever method you prefer, go to your WHMCS admin page and activate your gateway. You'll need to provide;
 - Your API key (or Sandbox API key)
