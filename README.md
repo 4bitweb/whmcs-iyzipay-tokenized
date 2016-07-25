@@ -4,7 +4,7 @@
 
 This gateway module provides Iyzipay (http://iyzico.com) payment gateway for WHMCS platform.
 
-Currently it supports payments in TRY, but support for other currencies (which iyzipay supports) can be added easily. Also this module supports remote tokenised credit card storage (ie. WHMCS won't store the CC details in its database, you'll be storing them on Iyzipay). Refunds are supported.
+Currently it supports payments in TRY, but support for other currencies (which iyzipay supports) can be added easily. Also this module supports remote tokenized credit card storage (ie. WHMCS won't store the CC details in its database, you'll be storing them on Iyzipay). Refunds are supported.
 
 This module does not support 3dsecure.
 
@@ -19,12 +19,12 @@ http://docs.whmcs.com/System_Requirements
 
 ## Installation ##
 
-You can install this module by cloning the repo or downloading the latest release from GitHub. See the [releases](https://github.com/4bitweb/whmcs-iyzipay-tokenised/releases) page.
+You can install this module by cloning the repo or downloading the latest release from GitHub. See the [releases](https://github.com/4bitweb/whmcs-iyzipay-tokenized/releases) page.
 
 #### Cloning the repo ####
 Clone the repo to whmcs_dir/modules/gateway directory directly. Change the directory name to "iyzipay";
 ```
-# mv whmcs-iyzipay-tokenised iyzipay
+# mv whmcs-iyzipay-tokenized iyzipay
 # cd iyzipay
 ```
 
@@ -40,7 +40,7 @@ After installing using whichever method you prefer, go to your WHMCS admin page 
 - Your secret key (or Sandbox secret key)
 - A unique identifier for Iyzipay conversation ID
 
-## Using the module without tokenised CC storage ##
+## Using the module without tokenized CC storage ##
 
 If you'd like to use the module without remote card storage (ie. you don't have that feature enabled in your Iyzipay account) just remove the `iyzipay_storeremote` function and change the metadata function;
 
@@ -76,14 +76,14 @@ WHMCS'nin minimum gereksinimlerini görmek için http://docs.whmcs.com/System_Re
 
 ## Kurulum ##
 
-Modülü whmcs/modules/gateway klasörü içerisine girek clonelayabilir ya da GitHub üzerinden son sürümü indirebilirsiniz. Sürümler için [releases](https://github.com/4bitweb/whmcs-iyzipay-tokenised/releases) sayfasına göz atın.
+Modülü whmcs/modules/gateway klasörü içerisine girek clonelayabilir ya da GitHub üzerinden son sürümü indirebilirsiniz. Sürümler için [releases](https://github.com/4bitweb/whmcs-iyzipay-tokenized/releases) sayfasına göz atın.
 
 #### Clone ####
 
 Repoyu clonelayacaksanız whmcs_dizini/modules/gateway dizini içerisinde yapmalısınız. Daha sonra oluşan klasörün adını iyzipay olarak değiştirin;
 
 ```
-# mv whmcs-iyzipay-tokenised iyzipay
+# mv whmcs-iyzipay-tokenized iyzipay
 # cd iyzipay
 ```
 
@@ -93,7 +93,7 @@ Iyzipay modülünün klasörü içerisinde composer çalıştırın;
 
 #### Son sürümü indirin (önerilen kurulum) ####
 
-[Buradan](https://github.com/4bitweb/whmcs-iyzipay-tokenised/releases) son sürümü indirdikten sonra whmcs_dir/modules/gateway dizinine dosyaları çıkartın. Daha sonra WHMCS yönetici sayfanızdan modülü aktif hale getirin.
+[Buradan](https://github.com/4bitweb/whmcs-iyzipay-tokenized/releases) son sürümü indirdikten sonra whmcs_dir/modules/gateway dizinine dosyaları çıkartın. Daha sonra WHMCS yönetici sayfanızdan modülü aktif hale getirin.
 
 Kurulumunuzu gerçekleştirdikten sonra modülünüzü ayarlamanız gerekiyor. Gerekli bilgiler;
 
