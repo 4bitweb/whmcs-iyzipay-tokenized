@@ -1,6 +1,6 @@
 {
-    "name": "4bitweb/whmcs-iyzipay-tokenised",
-    "description": "Iyzipay WHMCS merchant gateway module with tokenised credit card storage",
+    "name": "4-bit/whmcs-iyzipay-tokenized",
+    "description": "Iyzipay WHMCS merchant gateway module with tokenized credit card storage",
     "keywords": [
         "whmcs",
         "web host automation platform",
