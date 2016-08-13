@@ -244,6 +244,20 @@ function iyzipay_capture($params)
     $basketItems = array();
     foreach ($invoiceItems as $invoiceItem)
     {
+        if ($invoiceItem->amount < 0)
+        {
+            $promo = array_pop($basketItems);
+            $promoPrice = $promo->getPrice();
+            $promoPrice = $promoPrice + $invoiceItem->amount;
+            if ($promoPrice == 0)
+            {
+                continue;
+            } else {
+                $promo->setPrice($promoPrice);
+                array_push($basketItems, $promo);
+            }
+            continue;
+        }
         $basketItem = new \Iyzipay\Model\BasketItem();
         $basketItem->setId($invoiceItem->id);
         $basketItem->setName($invoiceItem->description);
@@ -297,6 +311,7 @@ function iyzipay_capture($params)
             'fee' => $fees,
         );
     } else {
+        logModuleCall('iyzipay', 'requestobject', $basketItems);
         return array(
             'status' => 'failed',
             'rawdata' => $payment->getRawResult(),
