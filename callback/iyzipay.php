@@ -36,6 +36,7 @@ if ($initConversationId != $gatewayParams["conversationId"])
 {
     $cbSuccess = false;
     $transactionStatus = "Request cannot be verified";
+    die($transactionStatus);
 }
 
 if ("success" != $initStatus)
@@ -61,21 +62,27 @@ if ("success" == $initStatus)
     $auth = \Iyzipay\Model\ThreedsPayment::create($request, $options);
 }
 
-$invoiceId = $auth->getBasketId();
-$transactionId = $auth->getpaymentId();
-$paymentAmount = $auth->getPaidPrice();
-$paymentFee = get_comission_rate($auth);
-
-// Validate invoice id
-$invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
-
-// Validate transaction id
-checkCbTransID($transactionId);
-
-logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
+if (NULL == $auth)
+{
+    $cbSuccess = false;
+    callback3DSecureRedirect($invoiceId, $cbSuccess);
+}
 
 if ("success" == $auth->getStatus() && 1 == $auth->getFraudStatus())
 {
+    $invoiceId = $auth->getBasketId();
+    $transactionId = $auth->getpaymentId();
+    $paymentAmount = $auth->getPaidPrice();
+    $paymentFee = get_comission_rate($auth);
+
+    // Validate invoice id
+    $invoiceId = checkCbInvoiceID($invoiceId, $gatewayParams['name']);
+
+    // Validate transaction id
+    checkCbTransID($transactionId);
+
+    logTransaction($gatewayParams['name'], $_POST, $transactionStatus);
+
     addInvoicePayment(
         $invoiceId,
         $transactionId,
@@ -85,6 +92,9 @@ if ("success" == $auth->getStatus() && 1 == $auth->getFraudStatus())
     );
 
     $cbSuccess = true;
+} elseif ("failure" == $auth->getStatus()) {
+    $transactionStatus = $auth->getErrorMessage();
+    $cbSuccess = false;
 }
 
 // Redirect to invoice
