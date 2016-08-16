@@ -6,7 +6,7 @@ This gateway module provides Iyzipay (http://iyzico.com) payment gateway for WHM
 
 Currently it supports payments in TRY, but support for other currencies (which iyzipay supports) can be added easily. Also this module supports remote tokenized credit card storage (ie. WHMCS won't store the CC details in its database, you'll be storing them on Iyzipay). Refunds are supported.
 
-This module does not support 3dsecure.
+~~This module does not support 3dsecure.~~ Now supports 3D Secure!
 
 ## Minimum Requirements ##
 
@@ -64,7 +64,7 @@ Bu modülü kullanarak WHMCS kurulumunuzdan Iyzipay ile ödeme alabilirsiniz.
 
 Şu anda modül yalnızca TRY ile ödeme almanızı sağlıyor fakat birkaç kontrol ekleyerek ve düzenleme yapılarak farklı para birimlerinden de ödeme alınabilir. Ayrıca Iyzico hesabınızda kart saklama özelliği aktifse, bu modülü kullanarak WHMCS yerine Iyzico'nun güvenli altyapısında kullanıcılarınız kredi kartlarını saklayabilirsiniz. İade işlemlerini de WHMCS üzerinden gerçekleştirebilirsiniz.
 
-Bu modülde 3dsecure desteği bulunmamaktadır.
+~~Bu modülde 3dsecure desteği bulunmamaktadır.~~ Artık 3D Secure da destekliyor!
 
 ## Minimum Gereksinimler ##
 
