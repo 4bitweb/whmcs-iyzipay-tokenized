@@ -128,6 +128,34 @@ function set_base_url($params)
     return ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
 }
 
+/**
+ * Get TC Kimlik No from custom fields
+ *
+ * Return the TC Kimlik No for user
+ *
+ * @param array WHMCS parameters
+ * @return string TC Kimlik No
+ */
+function get_tckimlik($params)
+{
+    // See if there's a TC Kimlik field if not, set TCKimlik to a default value
+    if (NULL === $params['tcModule'])
+    {
+        $tcKimlik = '11111111111';
+    } else {
+        $tcKey = $params['tcModule'];
+        foreach ($params['clientdetails']['customfields'] as $key => $value)
+        {
+            if ($value['id'] == $tcKey)
+            {
+                $tcKimlik = $value['value'];
+            }
+        }
+    }
+
+    return $tcKimlik;
+}
+
 /** HELPER FUNCTIONS END **/
 
 function iyzipay_MetaData()
@@ -178,6 +206,13 @@ function iyzipay_config()
             'Type' => 'yesno',
             'Description' => 'Tick to enable test mode',
         ),
+        'tcModule' => array(
+            'FriendlyName' => 'Turkish Identification Number Field',
+            'Type' => 'text',
+            'Size' => '3',
+            'Default' => '',
+            'Description' => "Leave blank if you don't have a TC Kimlik No addon",
+        ),
     );
 }
 
@@ -192,6 +227,7 @@ function iyzipay_capture($params)
     $clientId = get_user_id($params['invoiceid']);
     $clientAddress = ($params['clientdetails']['address2']) ? $params['clientdetails']['address1'] . " " . $params['clientdetails']['address2'] : $params['clientdetails']['address1'];
     $clientIP = $_SERVER['REMOTE_ADDR'];
+    $tcKimlik = get_tckimlik($params);
 
     /* Create Iyzipay API options */
     $options = new \Iyzipay\Options();
@@ -217,7 +253,7 @@ function iyzipay_capture($params)
     $buyer->setName($params['clientdetails']['firstname']);
     $buyer->setSurname($params['clientdetails']['lastname']);
     $buyer->setEmail($params['clientdetails']['email']);
-    $buyer->setIdentityNumber("11111111111");
+    $buyer->setIdentityNumber($tcKimlik);
     $buyer->setRegistrationAddress($clientAddress);
     $buyer->setIp($clientIP);
     $buyer->setCity($params['clientdetails']['city']);
@@ -331,6 +367,7 @@ function iyzipay_3dsecure($params)
     $clientAddress = ($params['clientdetails']['address2']) ? $params['clientdetails']['address1'] . " " . $params['clientdetails']['address2'] : $params['clientdetails']['address1'];
     $clientIP = $_SERVER['REMOTE_ADDR'];
     $callbackUrl = $params['systemurl'].'/modules/gateways/callback/iyzipay.php';
+    $tcKimlik = get_tckimlik($params);
 
     /* Create Iyzipay API options */
     $options = new \Iyzipay\Options();
@@ -357,7 +394,7 @@ function iyzipay_3dsecure($params)
     $buyer->setName($params['clientdetails']['firstname']);
     $buyer->setSurname($params['clientdetails']['lastname']);
     $buyer->setEmail($params['clientdetails']['email']);
-    $buyer->setIdentityNumber("11111111111");
+    $buyer->setIdentityNumber($tcKimlik);
     $buyer->setRegistrationAddress($clientAddress);
     $buyer->setIp($clientIP);
     $buyer->setCity($params['clientdetails']['city']);
@@ -440,7 +477,9 @@ function iyzipay_3dsecure($params)
 
     if ("success" == $status)
     {
-        return $threedsInitialize->getHtmlContent();
+        logModuleCall('iyzipay3ds', '3dsInit', print_r($request, true), $threedsInitialize->getRawResult());
+        $htmlOutput = $threedsInitialize->getHtmlContent();
+        return $htmlOutput;
     } else {
         $output = '<script type="text/javascript">';
         $output .= 'document.getElementById("frmThreeDAuth").style.display = "block";';
