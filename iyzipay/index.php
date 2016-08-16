@@ -128,6 +128,14 @@ function set_base_url($params)
     return ("on" == $params['testMode']) ? "https://sandbox-api.iyzipay.com" : "https://api.iyzipay.com";
 }
 
+/**
+ * Get TC Kimlik No from custom fields
+ *
+ * Return the TC Kimlik No for user
+ *
+ * @param array WHMCS parameters
+ * @return string TC Kimlik No
+ */
 function get_tckimlik($params)
 {
     // See if there's a TC Kimlik field if not, set TCKimlik to a default value
@@ -147,7 +155,6 @@ function get_tckimlik($params)
 
     return $tcKimlik;
 }
-
 
 /** HELPER FUNCTIONS END **/
 
