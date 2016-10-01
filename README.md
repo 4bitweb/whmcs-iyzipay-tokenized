@@ -14,6 +14,8 @@ Currently it supports payments in TRY, but support for other currencies (which i
 - PHP >= 5.3.7
 - Composer if you'd like to clone this repo
 
+Tested on WHMCS 7.0 and PHP 7.0, too.
+
 For the latest WHMCS minimum system requirements, please refer to
 http://docs.whmcs.com/System_Requirements
 
